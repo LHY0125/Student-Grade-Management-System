@@ -8,7 +8,6 @@
 #define STATISTICAL_ANALYSIS_H
 
 #include "config.h"
-#include "main_menu.h"
 
 // 课程统计结构体
 typedef struct {

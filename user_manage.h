@@ -1,6 +1,8 @@
 #ifndef USER_MANAGE_H
 #define USER_MANAGE_H
 
+#include "config.h"
+
 // 用户认证与管理相关函数
 int loginSystem();         // 处理用户登录
 void loadUsersFromFile();  // 从文件加载用户数据

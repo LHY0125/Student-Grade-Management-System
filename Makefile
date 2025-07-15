@@ -7,29 +7,23 @@ CFLAGS = -Wall -Wextra -std=c99 -g
 TARGET = student_system
 
 # 源文件
-SOURCES = main.c globals.c auxiliary.c main_menu.c user_manage.c stu_data.c statistical_analysis.c
-
-# 目标文件
-OBJECTS = $(SOURCES:.c=.o)
+SOURCES = main.c globals.c main_menu.c user_manage.c core_handlers.c statistical_analysis.c student_io.c student_crud.c student_search.c student_sort.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c
 
 # 头文件
-HEADERS = config.h globals.h auxiliary.h main_menu.h user_manage.h stu.data.h statistical_analysis.h
+HEADERS = config.h globals.h main_menu.h user_manage.h core_handlers.h statistical_analysis.h student_io.h student_crud.h student_search.h student_sort.h io_utils.h validation.h string_utils.h file_utils.h math_utils.h system_utils.h
 
 # 默认目标
 all: $(TARGET)
 
-# 链接目标文件
-$(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(TARGET)
-
-# 编译源文件
-%.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+# 直接编译链接（不生成.o文件）
+$(TARGET): $(SOURCES) $(HEADERS)
+	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET)
 
 # 清理编译文件
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(TARGET)
 	rm -f *.exe
+	rm -f *.o
 
 # 创建必要的目录
 setup:

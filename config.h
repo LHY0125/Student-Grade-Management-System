@@ -26,6 +26,10 @@
 #define PASS_SCORE 60.0             // 及格分数
 #define EXCELLENT_SCORE 90.0        // 优秀分数
 
+// 年龄相关配置
+#define MIN_AGE 10                  // 最小年龄
+#define MAX_AGE 100                 // 最大年龄
+
 // 文件路径配置
 #define STUDENTS_FILE "data/students.csv"   // 学生数据文件
 #define USERS_FILE "data/users.txt"         // 用户数据文件

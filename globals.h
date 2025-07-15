@@ -9,7 +9,6 @@
 
 #include <stdbool.h>
 #include "config.h"
-#include "main_menu.h"
 
 // 用户结构体定义
 typedef struct {

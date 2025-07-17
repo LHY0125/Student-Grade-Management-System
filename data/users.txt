@@ -1,0 +1,4 @@
+admin:123456:1
+teacher:password:0
+LHY:1234:0
+lhy:1234:1

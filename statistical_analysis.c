@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 #include "statistical_analysis.h"
 #include "config.h"
 #include "globals.h"
@@ -173,7 +174,8 @@ void displayScoreDistribution()
         return;
     }
 
-    ScoreDistribution dist = calculateScoreDistribution();
+    // 使用缓存的分数分布数据
+    ScoreDistribution dist = getCachedScoreDistribution();
 
     printf("\n分数段分布：\n");
     printSeparator();
@@ -263,28 +265,9 @@ void displayStudentRanking()
         return;
     }
 
-    // 创建排名数组
+    // 使用缓存的排名数据
     StudentRank rankings[MAX_STUDENTS];
-    for (int i = 0; i < studentCount; i++)
-    {
-        rankings[i].studentIndex = i;
-        rankings[i].averageScore = students[i].averageScore;
-        rankings[i].totalScore = students[i].totalScore;
-    }
-
-    // 按平均分排序（降序）
-    for (int i = 0; i < studentCount - 1; i++)
-    {
-        for (int j = 0; j < studentCount - 1 - i; j++)
-        {
-            if (rankings[j].averageScore < rankings[j + 1].averageScore)
-            {
-                StudentRank temp = rankings[j];
-                rankings[j] = rankings[j + 1];
-                rankings[j + 1] = temp;
-            }
-        }
-    }
+    int rankingCount = getCachedStudentRankings(rankings);
 
     printf("\n");
     // 调整中文表头的对齐格式，考虑中文字符的显示宽度
@@ -292,7 +275,7 @@ void displayStudentRanking()
            "排名", "学号", "姓名", "总分", "平均分");
     printf("==========================================\n");
 
-    for (int i = 0; i < studentCount; i++)
+    for (int i = 0; i < rankingCount; i++)
     {
         int idx = rankings[i].studentIndex;
         printf("%-5d %-10s %-12s %-8.2f %-8.2f\n",
@@ -328,7 +311,8 @@ void displayOverallStatistics()
         return;
     }
 
-    OverallStats stats = calculateOverallStats();
+    // 使用缓存的总体统计数据
+    OverallStats stats = getCachedOverallStats();
 
     printf("\n学生信息统计：\n");
     printSeparator();
@@ -651,4 +635,207 @@ void updateGlobalStats()
 
     overallAverageScore = total / studentCount;
     statsNeedUpdate = false;
+    
+    // 使统计缓存无效
+    invalidateCache();
+}
+
+// ==================== 缓存管理函数实现 ====================
+
+/**
+ * @brief 初始化统计缓存
+ * @details 初始化统计缓存系统，清空所有缓存数据
+ * @note 在系统启动时调用，确保缓存处于干净状态
+ */
+// 快速排序辅助函数：分区
+int partitionRankings(StudentRank arr[], int low, int high) {
+    float pivot = arr[high].averageScore;
+    int i = (low - 1);
+    
+    for (int j = low; j <= high - 1; j++) {
+        // 降序排列：如果当前元素大于等于基准值
+        if (arr[j].averageScore >= pivot) {
+            i++;
+            StudentRank temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    StudentRank temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return (i + 1);
+}
+
+// 快速排序主函数
+void quickSortRankings(StudentRank arr[], int low, int high) {
+    if (low < high) {
+        int pi = partitionRankings(arr, low, high);
+        quickSortRankings(arr, low, pi - 1);
+        quickSortRankings(arr, pi + 1, high);
+    }
+}
+
+void initStatisticsCache()
+{
+    statsCache.isValid = false;
+    statsCache.lastStudentCount = 0;
+    statsCache.lastDataHash = 0;
+    memset(&statsCache.overallStats, 0, sizeof(OverallStats));
+    memset(&statsCache.scoreDistribution, 0, sizeof(ScoreDistribution));
+    memset(statsCache.rankings, 0, sizeof(statsCache.rankings));
+}
+
+/**
+ * @brief 检查缓存是否有效
+ * @details 检查统计缓存是否仍然有效，通过比较学生数量和数据哈希值
+ * @return bool 如果缓存有效返回true，否则返回false
+ * @note 当学生数据发生变化时，缓存会被标记为无效
+ */
+bool isCacheValid()
+{
+    if (!statsCache.isValid) {
+        return false;
+    }
+    
+    // 检查学生数量是否变化
+    if (statsCache.lastStudentCount != studentCount) {
+        return false;
+    }
+    
+    // 检查数据哈希值是否变化
+    unsigned long currentHash = calculateDataHash();
+    if (statsCache.lastDataHash != currentHash) {
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * @brief 更新统计缓存
+ * @details 重新计算并更新所有统计缓存数据
+ * @note 当缓存无效时调用，重新计算所有统计信息并更新缓存
+ * @note 包括总体统计、分数分布和学生排名的缓存更新
+ */
+void updateStatisticsCache()
+{
+    if (studentCount == 0) {
+        initStatisticsCache();
+        return;
+    }
+    
+    // 更新总体统计缓存
+    statsCache.overallStats = calculateOverallStats();
+    
+    // 更新分数分布缓存
+    statsCache.scoreDistribution = calculateScoreDistribution();
+    
+    // 更新学生排名缓存
+    for (int i = 0; i < studentCount; i++) {
+        statsCache.rankings[i].studentIndex = i;
+        statsCache.rankings[i].averageScore = students[i].averageScore;
+        statsCache.rankings[i].totalScore = students[i].totalScore;
+    }
+    
+    // 使用快速排序按平均分排序（降序）
+    quickSortRankings(statsCache.rankings, 0, studentCount - 1);
+    
+    // 更新缓存状态
+    statsCache.isValid = true;
+    statsCache.lastStudentCount = studentCount;
+    statsCache.lastDataHash = calculateDataHash();
+}
+
+/**
+ * @brief 使缓存无效
+ * @details 将统计缓存标记为无效，强制下次访问时重新计算
+ * @note 当学生数据被修改时调用，确保统计数据的准确性
+ */
+void invalidateCache()
+{
+    statsCache.isValid = false;
+}
+
+/**
+ * @brief 计算数据哈希值
+ * @details 计算当前学生数据的哈希值，用于检测数据变化
+ * @return unsigned long 当前数据的哈希值
+ * @note 基于学生数量、学号、成绩等关键数据计算哈希值
+ */
+unsigned long calculateDataHash()
+{
+    unsigned long hash = 5381; // DJB2 哈希算法初始值
+    
+    // 包含学生数量
+    hash = ((hash << 5) + hash) + studentCount;
+    
+    for (int i = 0; i < studentCount; i++) {
+        // 包含学号
+        for (int j = 0; students[i].studentID[j] != '\0'; j++) {
+            hash = ((hash << 5) + hash) + students[i].studentID[j];
+        }
+        
+        // 包含总分和平均分
+        hash = ((hash << 5) + hash) + (unsigned long)(students[i].totalScore * 100);
+        hash = ((hash << 5) + hash) + (unsigned long)(students[i].averageScore * 100);
+        
+        // 包含课程数量
+        hash = ((hash << 5) + hash) + students[i].courseCount;
+        
+        // 包含各科成绩
+        for (int j = 0; j < students[i].courseCount; j++) {
+            hash = ((hash << 5) + hash) + (unsigned long)(students[i].scores[j] * 100);
+        }
+    }
+    
+    return hash;
+}
+
+/**
+ * @brief 获取缓存的总体统计
+ * @details 获取缓存的总体统计数据，如果缓存无效则先更新缓存
+ * @return OverallStats 总体统计数据
+ * @note 优先使用缓存数据，提高查询效率
+ */
+OverallStats getCachedOverallStats()
+{
+    if (!isCacheValid()) {
+        updateStatisticsCache();
+    }
+    return statsCache.overallStats;
+}
+
+/**
+ * @brief 获取缓存的分数分布
+ * @details 获取缓存的分数分布数据，如果缓存无效则先更新缓存
+ * @return ScoreDistribution 分数分布数据
+ * @note 优先使用缓存数据，避免重复计算
+ */
+ScoreDistribution getCachedScoreDistribution()
+{
+    if (!isCacheValid()) {
+        updateStatisticsCache();
+    }
+    return statsCache.scoreDistribution;
+}
+
+/**
+ * @brief 获取缓存的学生排名
+ * @details 获取缓存的学生排名数据，如果缓存无效则先更新缓存
+ * @param rankings 输出参数，存储排名数据的数组
+ * @return int 返回排名数据的数量
+ * @note 排名按平均分降序排列，优先使用缓存数据
+ */
+int getCachedStudentRankings(StudentRank* rankings)
+{
+    if (!isCacheValid()) {
+        updateStatisticsCache();
+    }
+    
+    if (rankings != NULL && studentCount > 0) {
+        memcpy(rankings, statsCache.rankings, studentCount * sizeof(StudentRank));
+    }
+    
+    return studentCount;
 }

@@ -1,8 +1,20 @@
 /**
- * @file main.c
- * @brief 学生成绩管理系统主程序
- * @note 系统入口点，包含主要的程序流程控制
- */
+* @brief 主程序入口
+* @brief 学生成绩管理系统主程序
+* @details 学生成绩管理系统的主入口函数，负责系统初始化、用户登录验证、
+*          主菜单循环处理和系统清理等核心流程
+*          程序流程：设置编码 -> 系统初始化 -> 用户登录 -> 主菜单循环 -> 数据保存 -> 系统清理
+* @param argc 命令行参数个数（当前未使用）
+* @param argv 命令行参数数组（当前未使用）
+* @return 程序退出状态码：0表示正常退出，-1表示异常退出
+* @note 系统预设用户账户：
+*       1. admin - 密码：123456（管理员权限）
+*       2. teacher - 密码：password（普通用户权限）
+* @note 编译运行命令：
+*       gcc -o student_system.exe *.c -I.
+        ./student_system
+* @warning 登录失败超过MAX_LOGIN_ATTEMPTS次会强制退出程序
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,22 +37,6 @@
 #include "core_handlers.h"
 #include "student_io.h"
 
-/**
- * @brief 主程序入口
- * @details 学生成绩管理系统的主入口函数，负责系统初始化、用户登录验证、
- *          主菜单循环处理和系统清理等核心流程
- *          程序流程：设置编码 -> 系统初始化 -> 用户登录 -> 主菜单循环 -> 数据保存 -> 系统清理
- * @param argc 命令行参数个数（当前未使用）
- * @param argv 命令行参数数组（当前未使用）
- * @return 程序退出状态码：0表示正常退出，-1表示异常退出
- * @note 系统预设用户账户：
- *       1. admin - 密码：123456（管理员权限）
- *       2. teacher - 密码：password（普通用户权限）
- * @note 编译运行命令：
- *       gcc -Wall -Wextra -std=c99 -g main.c globals.c main_menu.c user_manage.c core_handlers.c statistical_analysis.c student_io.c student_crud.c student_search.c student_sort.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c -o student_system
-   ./student_system
- * @warning 登录失败超过MAX_LOGIN_ATTEMPTS次会强制退出程序
- */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {
     // 设置控制台编码为UTF-8

@@ -8,14 +8,7 @@
 #define GLOBALS_H
 
 #include <stdbool.h>
-#include "config.h"
-
-// 用户结构体定义
-typedef struct {
-    char username[MAX_USERNAME_LENGTH];
-    char password[MAX_PASSWORD_LENGTH];
-    bool isAdmin;  // 是否为管理员
-} User;
+#include "types.h"
 
 // 全局变量声明
 extern Student students[MAX_STUDENTS];      // 学生数组
@@ -34,5 +27,12 @@ extern float overallAverageScore;          // 全体学生平均分
 extern float highestScore;                 // 最高分
 extern float lowestScore;                  // 最低分
 extern bool statsNeedUpdate;               // 统计信息是否需要更新
+
+// 排序参数
+extern int currentSortCriteria;            // 当前排序依据
+extern int currentSortOrder;               // 当前排序顺序
+
+// 统计缓存
+extern StatisticsCache statsCache;        // 统计分析缓存
 
 #endif // GLOBALS_H

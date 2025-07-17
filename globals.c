@@ -23,3 +23,10 @@ float overallAverageScore = 0.0;           // 全体学生平均分
 float highestScore = 0.0;                  // 最高分
 float lowestScore = 100.0;                 // 最低分
 bool statsNeedUpdate = true;               // 统计信息是否需要更新
+
+// 排序参数
+int currentSortCriteria = 0;               // 当前排序依据
+int currentSortOrder = 0;                  // 当前排序顺序
+
+// 统计缓存
+StatisticsCache statsCache = {false, {0}, {0}, {{0}}, 0, 0}; // 统计分析缓存

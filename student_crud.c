@@ -182,6 +182,9 @@ void addStudent()
     dataModified = true;
     statsNeedUpdate = true;
     
+    // 使统计缓存无效
+    invalidateCache();
+    
     // 显示添加成功信息
     displayAddedStudentInfo(&newStudent);
     
@@ -242,6 +245,9 @@ void deleteStudent()
 
                 dataModified = true;
                 statsNeedUpdate = true;
+                
+                // 使统计缓存无效
+                invalidateCache();
 
                 printSuccess("学生信息删除成功！");
             }
@@ -448,6 +454,9 @@ static void handleStudentModification(Student *student)
     
     dataModified = true;
     statsNeedUpdate = true;
+    
+    // 使统计缓存无效
+    invalidateCache();
     
     printSuccess("学生信息修改成功！");
 }

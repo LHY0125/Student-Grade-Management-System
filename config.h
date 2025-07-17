@@ -96,17 +96,4 @@
 #define MSG_INVALID_INPUT "输入无效，请重新输入！"
 #define MSG_FILE_ERROR "文件操作错误！"
 
-// 数据结构定义
-typedef struct {
-    char studentID[MAX_ID_LENGTH];          // 学号
-    char name[MAX_NAME_LENGTH];             // 姓名
-    int age;                                // 年龄
-    char gender;                            // 性别 ('M'/'F')
-    char courses[MAX_COURSES][MAX_COURSE_NAME_LENGTH]; // 课程名称
-    float scores[MAX_COURSES];              // 各科成绩
-    int courseCount;                        // 课程数量
-    float totalScore;                       // 总分
-    float averageScore;                     // 平均分
-} Student;
-
 #endif // CONFIG_H

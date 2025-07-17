@@ -168,6 +168,9 @@ void loadStudentsFromFile()
     
     // 更新统计信息
     statsNeedUpdate = true;
+    
+    // 使统计缓存无效
+    invalidateCache();
 }
 
 /**

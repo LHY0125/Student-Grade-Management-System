@@ -13,12 +13,16 @@
 
 // 函数前向声明
 void displayStudentInfo(const Student *student);
+static int binarySearchByID(const char *studentID);
+static void ensureSortedByID();
 
 /**
  * @brief 按学号查找学生
  * @details 根据用户输入的学号精确查找学生信息
+ *          使用二分搜索算法提高查找效率，时间复杂度O(log n)
  *          找到后显示该学生的详细信息
- * @note 查找方式：精确匹配学号
+ * @note 查找方式：精确匹配学号，使用二分搜索算法
+ * @note 算法优化：从线性搜索O(n)优化为二分搜索O(log n)
  * @warning 如果没有学生数据或未找到匹配学生，将显示相应提示信息
  */
 void searchStudentByID()
@@ -37,14 +41,17 @@ void searchStudentByID()
     printf("\n");
     safeInputString("请输入学号", studentID, MAX_ID_LENGTH);
 
-    for (int i = 0; i < studentCount; i++)
+    // 确保数组按学号排序，以支持二分搜索
+    ensureSortedByID();
+    
+    // 使用二分搜索查找学生
+    int index = binarySearchByID(studentID);
+    
+    if (index != -1)
     {
-        if (strcmp(students[i].studentID, studentID) == 0)
-        {
-            displayStudentInfo(&students[i]);
-            pauseSystem();
-            return;
-        }
+        displayStudentInfo(&students[index]);
+        pauseSystem();
+        return;
     }
 
     printError("未找到该学号的学生！");
@@ -173,4 +180,67 @@ void displayStudentInfo(const Student *student)
         printf("\n总分: %.2f\n", student->totalScore);
         printf("平均分: %.2f\n", student->averageScore);
     }
+}
+
+/**
+ * @brief 确保学生数组按学号排序
+ * @details 检查学生数组是否按学号排序，如果没有则进行排序
+ *          用于支持二分搜索算法
+ * @note 只在需要时进行排序，避免不必要的性能开销
+ */
+static void ensureSortedByID()
+{
+    // 检查是否已经按学号排序
+    bool isSorted = true;
+    for (int i = 0; i < studentCount - 1; i++)
+    {
+        if (strcmp(students[i].studentID, students[i + 1].studentID) > 0)
+        {
+            isSorted = false;
+            break;
+        }
+    }
+    
+    // 如果没有排序，则按学号排序
+    if (!isSorted)
+    {
+        // 使用外部排序函数
+        extern void sortStudents(int criteria, int order);
+        sortStudents(SORT_BY_ID, SORT_ASCENDING);
+    }
+}
+
+/**
+ * @brief 二分搜索按学号查找学生
+ * @details 使用二分搜索算法在已排序的学生数组中查找指定学号
+ *          时间复杂度O(log n)，比线性搜索O(n)更高效
+ * @param studentID 要查找的学号
+ * @return 找到的学生索引，如果未找到返回-1
+ * @note 要求学生数组必须按学号排序
+ */
+static int binarySearchByID(const char *studentID)
+{
+    int left = 0;
+    int right = studentCount - 1;
+    
+    while (left <= right)
+    {
+        int mid = left + (right - left) / 2;
+        int cmp = strcmp(students[mid].studentID, studentID);
+        
+        if (cmp == 0)
+        {
+            return mid; // 找到了
+        }
+        else if (cmp < 0)
+        {
+            left = mid + 1; // 在右半部分搜索
+        }
+        else
+        {
+            right = mid - 1; // 在左半部分搜索
+        }
+    }
+    
+    return -1; // 未找到
 }

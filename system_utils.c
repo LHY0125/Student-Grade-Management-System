@@ -10,6 +10,9 @@
 #include "file_utils.h"
 #include "io_utils.h"
 #include "config.h"
+#include "user_manage.h"
+#include "student_io.h"
+#include "statistical_analysis.h"
 
 /**
  * @brief 初始化系统
@@ -28,6 +31,15 @@ bool initializeSystem()
         printError("系统初始化失败：无法创建数据目录");
         return false;
     }
+
+    // 加载用户数据
+    loadUsersFromFile();
+    
+    // 加载学生数据
+    loadStudentsFromFile();
+    
+    // 初始化统计缓存
+    initStatisticsCache();
 
     printSuccess("系统初始化完成");
     return true;

@@ -80,7 +80,7 @@ cd Stu_scores_system
 
 2. **使用GCC编译**
 ```bash
-gcc -o student_system.exe main.c stu_data.c student_crud.c student_search.c user_manage.c main_menu.c student_io.c core_handlers.c statistical_analysis.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c globals.c
+gcc -o student_system.exe main.c student_crud.c student_search.c student_sort.c user_manage.c main_menu.c student_io.c core_handlers.c statistical_analysis.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c globals.c
 ```
 
 3. **使用Makefile编译（v3.0.0优化版）**
@@ -148,36 +148,40 @@ teacher:password:0
 
 ```
 Stu_scores_system/ (v3.0.0 统一类型管理结构)
-├── 📁 data/                    # 数据文件目录
-│   ├── students.csv           # 学生数据（CSV格式）
-│   └── users.txt             # 用户数据
-├── 📁 backup/                 # 备份目录
-├── 📁 MD/                     # 文档目录
-│   ├── README.md             # 项目说明
-│   └── CSV_FORMAT.md         # CSV格式说明
-├── 📁 TXT/                    # 文本文档目录
-│   ├── 系统说明文档.txt        # 系统详细说明
-│   └── 代码统计报告.txt        # 代码统计分析
-├── 📄 main.c                  # 主程序入口
-├── 📄 types.h                 # 统一数据类型定义（v3.0.0新增）
-├── 📄 config.h                # 系统配置
-├── 📄 globals.c/h             # 全局变量
-├── 📄 stu_data.c/h            # 学生数据管理
-├── 📄 student_crud.c/h        # 学生CRUD操作
-├── 📄 student_search.c/h      # 学生搜索功能
-├── 📄 student_io.c/h          # 学生IO操作
-├── 📄 statistical_analysis.c/h # 统计分析
-├── 📄 user_manage.c/h         # 用户管理
-├── 📄 main_menu.c/h           # 菜单系统
-├── 📄 core_handlers.c/h       # 核心处理器
-├── 📄 io_utils.c/h            # IO工具库
-├── 📄 validation.c/h          # 验证工具库
-├── 📄 string_utils.c/h        # 字符串工具库
-├── 📄 file_utils.c/h          # 文件工具库
-├── 📄 math_utils.c/h          # 数学工具库
-├── 📄 system_utils.c/h        # 系统工具库
-├── 📄 Makefile                # 编译配置（v2.2优化版）
-└── 📄 要求.txt                # 需求文档
+├── 📁 .idea/                  # IntelliJ IDEA配置目录
+├── 📁 .vscode/                # VS Code配置目录
+├── 📁 data/                   # 数据文件目录
+│   ├── students.csv          # 学生数据（CSV格式）
+│   └── users.txt            # 用户数据
+├── 📁 backup/                # 备份目录
+├── 📁 build/                 # 编译输出目录
+├── 📁 MD/                    # 文档目录
+│   ├── README.md            # 项目说明
+│   └── CSV_FORMAT.md        # CSV格式说明
+├── 📁 TXT/                   # 文本文档目录
+│   ├── 系统说明文档.txt       # 系统详细说明
+│   ├── 代码统计报告.txt       # 代码统计分析
+│   └── 要求.txt             # 需求文档
+├── 📄 main.c                 # 主程序入口
+├── 📄 types.h                # 统一数据类型定义（v3.0.0新增）
+├── 📄 config.h               # 系统配置
+├── 📄 globals.c/h            # 全局变量管理
+├── 📄 student_crud.c/h       # 学生CRUD操作
+├── 📄 student_search.c/h     # 学生搜索功能
+├── 📄 student_sort.c/h       # 学生排序功能
+├── 📄 student_io.c/h         # 学生IO操作
+├── 📄 statistical_analysis.c/h # 统计分析功能
+├── 📄 user_manage.c/h        # 用户管理
+├── 📄 main_menu.c/h          # 菜单系统
+├── 📄 core_handlers.c/h      # 核心处理器
+├── 📄 io_utils.c/h           # IO工具库
+├── 📄 validation.c/h         # 数据验证工具库
+├── 📄 string_utils.c/h       # 字符串工具库
+├── 📄 file_utils.c/h         # 文件操作工具库
+├── 📄 math_utils.c/h         # 数学计算工具库
+├── 📄 system_utils.c/h       # 系统工具库
+├── 📄 Makefile               # 编译配置（v3.0.0优化版）
+└── 📄 student_system.exe     # 编译生成的可执行文件
 ```
 
 ## 🛠️ 开发指南
@@ -196,19 +200,66 @@ Stu_scores_system/ (v3.0.0 统一类型管理结构)
 4. 更新配置文件（如需要）
 5. 编写测试用例
 
-### 数据结构
+### 核心数据结构
+
+#### 学生信息结构体
 ```c
 typedef struct {
     char studentID[MAX_ID_LENGTH];          // 学号
     char name[MAX_NAME_LENGTH];             // 姓名
     int age;                                // 年龄
-    char gender;                            // 性别
-    char courses[MAX_COURSES][MAX_COURSE_NAME_LENGTH]; // 课程
-    float scores[MAX_COURSES];              // 成绩
+    char gender;                            // 性别 ('M'/'F')
+    char courses[MAX_COURSES][MAX_COURSE_NAME_LENGTH]; // 课程名称
+    float scores[MAX_COURSES];              // 各科成绩
     int courseCount;                        // 课程数量
     float totalScore;                       // 总分
     float averageScore;                     // 平均分
 } Student;
+```
+
+#### 用户信息结构体
+```c
+typedef struct {
+    char username[MAX_USERNAME_LENGTH];     // 用户名
+    char password[MAX_PASSWORD_LENGTH];     // 密码
+    bool isAdmin;                           // 是否为管理员
+} User;
+```
+
+#### 统计分析结构体
+```c
+// 课程统计信息
+typedef struct {
+    int studentCount;                       // 学生人数
+    float maxScore;                         // 最高分
+    float minScore;                         // 最低分
+    float totalScore;                       // 总分
+    float averageScore;                     // 平均分
+    float passRate;                         // 及格率
+} CourseStats;
+
+// 分数分布统计
+typedef struct {
+    int excellent;                          // 优秀(90-100分)
+    int good;                               // 良好(80-89分)
+    int medium;                             // 中等(70-79分)
+    int pass;                               // 及格(60-69分)
+    int fail;                               // 不及格(0-59分)
+} ScoreDistribution;
+
+// 总体统计信息
+typedef struct {
+    int totalStudents;                      // 学生总数
+    int maleCount;                          // 男生人数
+    int femaleCount;                        // 女生人数
+    float averageAge;                       // 平均年龄
+    float highestAverage;                   // 最高平均分
+    float lowestAverage;                    // 最低平均分
+    float overallAverageScore;              // 总体平均分
+    float standardDeviation;                // 标准差
+    int totalCourses;                       // 课程总数
+    float averageCoursesPerStudent;         // 人均课程数
+} OverallStats;
 ```
 
 ## 🔧 配置说明

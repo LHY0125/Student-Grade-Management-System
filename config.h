@@ -106,8 +106,8 @@
 // 预定义的系统提示信息，保证消息的一致性和易于维护
 #define MSG_SUCCESS "操作成功！"           // 操作成功时的提示信息
 #define MSG_FAILURE "操作失败！"           // 操作失败时的通用错误信息
-#define MSG_NOT_FOUND "未找到相关记录！"   // 查询无结果时的提示信息
+#define MSG_NOT_FOUND "未找到相关记录！"    // 查询无结果时的提示信息
 #define MSG_INVALID_INPUT "输入无效，请重新输入！" // 用户输入格式错误时的提示
-#define MSG_FILE_ERROR "文件操作错误！"    // 文件读写操作失败时的错误信息
+#define MSG_FILE_ERROR "文件操作错误！"     // 文件读写操作失败时的错误信息
 
 #endif // CONFIG_H

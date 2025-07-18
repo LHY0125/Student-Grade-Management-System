@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/Code/Stu_scores_system",
-      "program": "d:/Code/Stu_scores_system/build/Debug/outDebug",
+      "cwd": "d:/Code/doing_exercises/Stu_scores_system",
+      "program": "d:/Code/doing_exercises/Stu_scores_system/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -37,7 +37,7 @@
 #include "core_handlers.h"
 #include "student_io.h"
 
-int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
+int main()
 {
     // 设置控制台编码为UTF-8
 #ifdef _WIN32

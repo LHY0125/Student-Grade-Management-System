@@ -33,6 +33,6 @@ extern int currentSortCriteria;            // 当前排序依据
 extern int currentSortOrder;               // 当前排序顺序
 
 // 统计缓存
-extern StatisticsCache statsCache;        // 统计分析缓存
+extern StatisticsCache statsCache;         // 统计分析缓存
 
 #endif // GLOBALS_H

@@ -9,7 +9,7 @@
 *       1. admin - 密码：123456（管理员权限）
 *       2. teacher - 密码：password（普通用户权限）
 * @note 编译运行命令：
-*       gcc -o student_system.exe *.c -I.
+*       gcc -std=c17 -o student_system.exe *.c -I.
         ./student_system
 * @warning 登录失败超过MAX_LOGIN_ATTEMPTS次会强制退出程序
 */

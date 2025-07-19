@@ -4,7 +4,7 @@
  * @details 支持学生信息管理、成绩统计分析、用户权限控制的完整教务管理系统
  * @author 刘航宇
  * @date 2025-07-12
- * @version 3.0.0
+ * @version 3.1.0
  * @note
  * 1. v3.0.0新增功能（最新版本）：
  *    - 🏗️ 统一类型管理系统，创建types.h集中管理所有数据结构
@@ -171,10 +171,10 @@
  * 
  * 编译命令（v3.0.0统一类型管理版本）：
  * 方式1（推荐）：直接编译
- * gcc -Wall -Wextra -std=c99 -g main.c globals.c main_menu.c user_manage.c core_handlers.c statistical_analysis.c student_io.c student_crud.c student_search.c student_sort.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c -o student_system
+ * gcc -Wall -Wextra -std=c17 -g main.c globals.c main_menu.c user_manage.c core_handlers.c statistical_analysis.c student_io.c student_crud.c student_search.c student_sort.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c -o student_system
  * 
  * 方式2：分步编译（如需要）
- * gcc -Wall -Wextra -std=c99 -g -c *.c
+ * gcc -Wall -Wextra -std=c17 -g -c *.c
  * gcc *.o -o student_system
  * 
  * 运行命令：
@@ -192,7 +192,7 @@
  * 
  * 系统要求：
  * - 操作系统：Windows 7+、Linux、macOS
- * - 编译器：GCC 4.8+、Clang 3.0+、MSVC 2015+
+ * - 编译器：GCC 7.0+、Clang 5.0+、MSVC 2017+（支持C17标准）
  * - 内存：最少64MB可用内存
  * - 存储：最少10MB可用磁盘空间
  * - 终端：支持ANSI颜色代码的终端（推荐）

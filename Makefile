@@ -1,7 +1,7 @@
 # 学生成绩管理系统 Makefile
 # 编译器设置
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -g
+CFLAGS = -Wall -Wextra -std=c17 -g
 
 # 目标文件
 TARGET = student_system

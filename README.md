@@ -23,7 +23,7 @@
 - **用户管理**：多用户登录、权限控制
 
 ### 🔧 技术特性
-- **统一类型管理**：v3.0.0版本创建types.h统一管理所有数据结构
+- **统一类型管理**：v4.0.0版本创建types.h统一管理所有数据结构
 - **全局变量优化**：排序参数和统计缓存移至全局作用域，提升性能
 - **高度模块化**：v2.2版本完成深度模块化重构，功能模块职责清晰
 - **工具库分离**：独立的IO、验证、字符串、文件、数学、系统工具模块
@@ -36,7 +36,7 @@
 ## 🏗️ 系统架构
 
 ```
-学生成绩管理系统 (v3.0.0 统一类型管理架构)
+学生成绩管理系统 (v4.0.0 统一类型管理架构)
 ├── 用户界面层 (UI Layer)
 │   ├── 主菜单 (main_menu.c)
 │   └── 学生IO操作 (student_io.c)
@@ -58,7 +58,7 @@
 │   ├── CSV文件操作
 │   └── 数据验证
 └── 配置层 (Config Layer)
-    ├── 统一类型定义 (types.h) - v3.0.0新增
+    ├── 统一类型定义 (types.h) - v4.0.0新增
     ├── 系统配置 (config.h)
     └── 全局变量 (globals.c/h)
 ```
@@ -83,12 +83,12 @@ cd Stu_scores_system
 gcc -o student_system.exe main.c student_crud.c student_search.c student_sort.c user_manage.c main_menu.c student_io.c core_handlers.c statistical_analysis.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c globals.c
 ```
 
-3. **使用Makefile编译（v3.0.0优化版）**
+3. **使用Makefile编译（v4.0.0优化版）**
 ```bash
 make
 ```
 
-> **注意**: v3.0.0版本在v2.2直接编译模式基础上，进一步优化了类型管理和依赖关系，编译更加高效。
+> **注意**: v4.0.0版本在v2.2直接编译模式基础上，进一步优化了类型管理和依赖关系，编译更加高效，并增强了系统安全性。
 
 4. **运行程序**
 ```bash
@@ -147,7 +147,7 @@ teacher:password:0
 ## 📁 项目结构
 
 ```
-Stu_scores_system/ (v3.0.0 统一类型管理结构)
+Stu_scores_system/ (v4.0.0 统一类型管理结构)
 ├── 📁 .idea/                  # IntelliJ IDEA配置目录
 ├── 📁 .vscode/                # VS Code配置目录
 ├── 📁 data/                   # 数据文件目录
@@ -163,7 +163,7 @@ Stu_scores_system/ (v3.0.0 统一类型管理结构)
 │   ├── 代码统计报告.txt       # 代码统计分析
 │   └── 要求.txt             # 需求文档
 ├── 📄 main.c                 # 主程序入口
-├── 📄 types.h                # 统一数据类型定义（v3.0.0新增）
+├── 📄 types.h                # 统一数据类型定义（v4.0.0新增）
 ├── 📄 config.h               # 系统配置
 ├── 📄 globals.c/h            # 全局变量管理
 ├── 📄 student_crud.c/h       # 学生CRUD操作
@@ -180,7 +180,7 @@ Stu_scores_system/ (v3.0.0 统一类型管理结构)
 ├── 📄 file_utils.c/h         # 文件操作工具库
 ├── 📄 math_utils.c/h         # 数学计算工具库
 ├── 📄 system_utils.c/h       # 系统工具库
-├── 📄 Makefile               # 编译配置（v3.0.0优化版）
+├── 📄 Makefile               # 编译配置（v4.0.0优化版）
 └── 📄 student_system.exe     # 编译生成的可执行文件
 ```
 
@@ -326,9 +326,22 @@ A: 按照CSV格式要求编辑 `data/students.csv` 文件，程序会自动读�
 
 ---
 
-**版本**: v3.0.0  
+**版本**: v4.0.0  
 **最后更新**: 2025年  
 **状态**: 稳定版本
+
+## 🆕 v4.0.0 更新内容
+
+### 🔒 安全性增强
+- **密码安全**：实现SHA-256哈希算法，替代明文密码存储
+- **缓冲区保护**：修复所有缓冲区溢出风险，替换不安全函数
+- **输入验证**：加强所有用户输入的验证和边界检查
+- **内存安全**：添加安全内存清除功能，防止敏感数据残留
+
+### 🛡️ 新增安全模块
+- **security_utils.c/h**：完整的密码哈希和安全工具库
+- **增强验证函数**：课程名称、用户名、密码强度、索引边界检查
+- **安全输入处理**：所有输入点添加格式验证和循环检查
 
 ## 🆕 v3.0.0 更新内容
 

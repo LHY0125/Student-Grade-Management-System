@@ -84,3 +84,87 @@ bool isValidAge(int age)
 {
     return age >= MIN_AGE && age <= MAX_AGE;
 }
+
+/**
+ * @brief 验证课程名称是否有效
+ * @details 检查课程名称格式是否符合要求：非空且长度在合理范围内
+ * @param courseName 要验证的课程名称字符串
+ * @return 如果课程名称有效返回true，否则返回false
+ * @note 课程名称不能为空，长度必须在1到MAX_COURSE_NAME_LENGTH之间
+ * @warning 如果courseName为NULL，返回false
+ */
+bool isValidCourseName(const char *courseName)
+{
+    if (courseName == NULL || isEmptyString(courseName))
+    {
+        return false;
+    }
+
+    int len = strlen(courseName);
+    return len > 0 && len <= MAX_COURSE_NAME_LENGTH;
+}
+
+/**
+ * @brief 验证用户名是否有效
+ * @details 检查用户名格式是否符合要求：非空、长度合理且只包含字母数字
+ * @param username 要验证的用户名字符串
+ * @return 如果用户名有效返回true，否则返回false
+ * @note 用户名不能为空，长度必须在3到MAX_USERNAME_LENGTH之间，只能包含字母和数字
+ * @warning 如果username为NULL，返回false
+ */
+bool isValidUsername(const char *username)
+{
+    if (username == NULL || isEmptyString(username))
+    {
+        return false;
+    }
+
+    int len = strlen(username);
+    if (len < 3 || len > MAX_USERNAME_LENGTH)
+    {
+        return false;
+    }
+
+    // 检查是否只包含字母和数字
+    for (int i = 0; i < len; i++)
+    {
+        if (!isalnum(username[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @brief 验证密码强度是否符合要求
+ * @details 检查密码是否满足最低安全要求
+ * @param password 要验证的密码字符串
+ * @return 如果密码有效返回true，否则返回false
+ * @note 密码长度必须在6到MAX_PASSWORD_LENGTH之间
+ * @warning 如果password为NULL，返回false
+ */
+bool isValidPassword(const char *password)
+{
+    if (password == NULL || isEmptyString(password))
+    {
+        return false;
+    }
+
+    int len = strlen(password);
+    return len >= 6 && len <= MAX_PASSWORD_LENGTH;
+}
+
+/**
+ * @brief 验证数组索引是否在有效范围内
+ * @details 检查索引是否在指定范围内，防止数组越界
+ * @param index 要验证的索引值
+ * @param maxIndex 最大有效索引值（不包含）
+ * @return 如果索引有效返回true，否则返回false
+ * @note 有效索引范围为0到maxIndex-1
+ */
+bool isValidIndex(int index, int maxIndex)
+{
+    return index >= 0 && index < maxIndex;
+}

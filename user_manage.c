@@ -12,6 +12,8 @@
 #include "globals.h"
 #include "io_utils.h"
 #include "string_utils.h"
+#include "security_utils.h"
+#include "validation.h"
 
 /**
  * @brief 处理用户登录
@@ -39,15 +41,20 @@ int loginSystem()
     for (int i = 0; i < userCount; i++)
     {
         if (strcmp(users[i].username, username) == 0 &&
-            strcmp(users[i].password, password) == 0)
+            verify_password(password, users[i].passwordHash))
         {
             // 登录成功
-            strcpy(currentUser, username);
+            strncpy(currentUser, username, MAX_USERNAME_LENGTH - 1);
+            currentUser[MAX_USERNAME_LENGTH - 1] = '\0';
             isCurrentUserAdmin = users[i].isAdmin;
+            // 安全清除密码
+            secure_memset(password, strlen(password));
             return 1;
         }
     }
 
+    // 安全清除密码
+    secure_memset(password, strlen(password));
     return 0; // 登录失败
 }
 
@@ -68,12 +75,14 @@ void loadUsersFromFile()
     if (file == NULL)
     {
         // 文件不存在，创建默认管理员账户
-        strcpy(users[0].username, "admin");
-        strcpy(users[0].password, "123456");
+        strncpy(users[0].username, "admin", MAX_USERNAME_LENGTH - 1);
+        users[0].username[MAX_USERNAME_LENGTH - 1] = '\0';
+        hash_password("123456", users[0].passwordHash);
         users[0].isAdmin = true;
 
-        strcpy(users[1].username, "teacher");
-        strcpy(users[1].password, "password");
+        strncpy(users[1].username, "teacher", MAX_USERNAME_LENGTH - 1);
+        users[1].username[MAX_USERNAME_LENGTH - 1] = '\0';
+        hash_password("password", users[1].passwordHash);
         users[1].isAdmin = false;
 
         userCount = 2;
@@ -94,15 +103,17 @@ void loadUsersFromFile()
         // 移除换行符
         line[strcspn(line, "\n")] = '\0';
 
-        // 解析格式：username:password:isAdmin
+        // 解析格式：username:passwordHash:isAdmin
         char *username = strtok(line, ":");
-        char *password = strtok(NULL, ":");
+        char *passwordHash = strtok(NULL, ":");
         char *adminFlag = strtok(NULL, ":");
 
-        if (username && password && adminFlag)
+        if (username && passwordHash && adminFlag)
         {
-            strcpy(users[userCount].username, username);
-            strcpy(users[userCount].password, password);
+            strncpy(users[userCount].username, username, MAX_USERNAME_LENGTH - 1);
+            users[userCount].username[MAX_USERNAME_LENGTH - 1] = '\0';
+            strncpy(users[userCount].passwordHash, passwordHash, SHA256_HEX_LENGTH - 1);
+            users[userCount].passwordHash[SHA256_HEX_LENGTH - 1] = '\0';
             users[userCount].isAdmin = (strcmp(adminFlag, "1") == 0);
             userCount++;
         }
@@ -132,7 +143,7 @@ void saveUsersToFile()
     {
         fprintf(file, "%s:%s:%d\n",
                 users[i].username,
-                users[i].password,
+                users[i].passwordHash,
                 users[i].isAdmin ? 1 : 0);
     }
 
@@ -168,20 +179,35 @@ void addUserAccount()
     char password[MAX_PASSWORD_LENGTH];
 
     printf("\n");
-    safeInputString("请输入新用户名", username, MAX_USERNAME_LENGTH);
-
-    // 检查用户名是否已存在
-    for (int i = 0; i < userCount; i++)
-    {
-        if (strcmp(users[i].username, username) == 0)
-        {
-            printError("用户名已存在！");
-            pauseSystem();
-            return;
+    do {
+        safeInputString("请输入新用户名", username, MAX_USERNAME_LENGTH);
+        if (!isValidUsername(username)) {
+            printError("用户名格式无效！用户名长度必须在3-20字符之间，只能包含字母和数字。");
+            continue;
         }
-    }
+        
+        // 检查用户名是否已存在
+        bool exists = false;
+        for (int i = 0; i < userCount; i++)
+        {
+            if (strcmp(users[i].username, username) == 0)
+            {
+                printError("用户名已存在！");
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) break;
+    } while (true);
 
-    safeInputString("请输入密码", password, MAX_PASSWORD_LENGTH);
+    do {
+        safeInputString("请输入密码", password, MAX_PASSWORD_LENGTH);
+        if (!isValidPassword(password)) {
+            printError("密码格式无效！密码长度必须在6-50字符之间。");
+            continue;
+        }
+        break;
+    } while (true);
 
     printf("\n用户类型：\n");
     printf("1. 普通用户\n");
@@ -189,10 +215,14 @@ void addUserAccount()
     int userType = safeInputInt("请选择用户类型", 1, 2);
 
     // 添加新用户
-    strcpy(users[userCount].username, username);
-    strcpy(users[userCount].password, password);
+    strncpy(users[userCount].username, username, MAX_USERNAME_LENGTH - 1);
+    users[userCount].username[MAX_USERNAME_LENGTH - 1] = '\0';
+    hash_password(password, users[userCount].passwordHash);
     users[userCount].isAdmin = (userType == 2);
     userCount++;
+    
+    // 安全清除明文密码
+    secure_memset(password, strlen(password));
 
     // 保存到文件
     saveUsersToFile();
@@ -297,7 +327,10 @@ void modifyUserPassword()
         {
             safeInputString("请输入新密码", newPassword, MAX_PASSWORD_LENGTH);
 
-            strcpy(users[i].password, newPassword);
+            hash_password(newPassword, users[i].passwordHash);
+            
+            // 安全清除明文密码
+            secure_memset(newPassword, strlen(newPassword));
 
             // 保存到文件
             saveUsersToFile();

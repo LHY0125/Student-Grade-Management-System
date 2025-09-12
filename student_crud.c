@@ -64,15 +64,18 @@ static void inputBasicInfo(Student *student)
     }
     
     // 输入年龄
-    student->age = safeInputInt("请输入年龄", 10, 100);
+    while (1)
+    {
+        student->age = safeInputInt("请输入年龄", 10, 100);
+        if (isValidAge(student->age))
+            break;
+        printError("年龄输入无效！年龄必须在合理范围内。");
+    }
     
     // 输入性别
     while (1)
     {
-        printf("请输入性别 (M/F): ");
-        char gender;
-        scanf(" %c", &gender);
-        clearInputBuffer();
+        char gender = safeInputChar("请输入性别 (M/F)");
         
         if (isValidGender(gender))
         {
@@ -97,21 +100,34 @@ static void inputCourseInfo(Student *student)
     {
         printf("\n第 %d 门课程：\n", student->courseCount + 1);
         
-        safeInputString("课程名称",
-                        student->courses[student->courseCount],
-                        MAX_COURSE_NAME_LENGTH);
+        // 输入课程名称并验证
+        while (1)
+        {
+            safeInputString("课程名称",
+                            student->courses[student->courseCount],
+                            MAX_COURSE_NAME_LENGTH);
+            
+            if (isValidCourseName(student->courses[student->courseCount]))
+                break;
+            printError("课程名称格式无效！课程名称不能为空。");
+        }
         
-        student->scores[student->courseCount] =
-            safeInputFloat("课程分数", MIN_SCORE, MAX_SCORE);
+        // 输入课程分数并验证
+        while (1)
+        {
+            student->scores[student->courseCount] =
+                safeInputFloat("课程分数", MIN_SCORE, MAX_SCORE);
+            
+            if (isValidScore(student->scores[student->courseCount]))
+                break;
+            printError("成绩输入无效！成绩必须在0-100分之间。");
+        }
         
         student->courseCount++;
         
         if (student->courseCount < MAX_COURSES)
         {
-            printf("\n是否继续添加课程？(y/n): ");
-            char choice;
-            scanf(" %c", &choice);
-            clearInputBuffer();
+            char choice = safeInputChar("\n是否继续添加课程？(y/n)");
             
             if (choice != 'y' && choice != 'Y')
             {
@@ -229,10 +245,7 @@ void deleteStudent()
             printf("学号: %s\n", students[i].studentID);
             printf("姓名: %s\n", students[i].name);
 
-            printf("\n确认删除？(y/n): ");
-            char choice;
-            scanf(" %c", &choice);
-            clearInputBuffer();
+            char choice = safeInputChar("\n确认删除？(y/n)");
 
             if (choice == 'y' || choice == 'Y')
             {
@@ -288,10 +301,7 @@ static void modifyStudentGender(Student *student)
 {
     while (1)
     {
-        printf("请输入新性别 (M/F): ");
-        char gender;
-        scanf(" %c", &gender);
-        clearInputBuffer();
+        char gender = safeInputChar("请输入新性别 (M/F)");
         
         if (isValidGender(gender))
         {
@@ -316,7 +326,22 @@ static void modifyExistingCourse(Student *student)
     }
     
     int courseIndex = safeInputInt("请选择要修改的课程", 1, student->courseCount) - 1;
-    student->scores[courseIndex] = safeInputFloat("新成绩", MIN_SCORE, MAX_SCORE);
+    
+    // 验证索引有效性
+    if (!isValidIndex(courseIndex, student->courseCount))
+    {
+        printError("课程索引无效！");
+        return;
+    }
+    
+    // 输入新成绩并验证
+    while (1)
+    {
+        student->scores[courseIndex] = safeInputFloat("新成绩", MIN_SCORE, MAX_SCORE);
+        if (isValidScore(student->scores[courseIndex]))
+            break;
+        printError("成绩输入无效！成绩必须在0-100分之间。");
+    }
 }
 
 /**
@@ -332,8 +357,24 @@ static void addNewCourse(Student *student)
         return;
     }
     
-    safeInputString("课程名称", student->courses[student->courseCount], MAX_COURSE_NAME_LENGTH);
-    student->scores[student->courseCount] = safeInputFloat("课程成绩", MIN_SCORE, MAX_SCORE);
+    // 输入课程名称并验证
+    while (1)
+    {
+        safeInputString("课程名称", student->courses[student->courseCount], MAX_COURSE_NAME_LENGTH);
+        if (isValidCourseName(student->courses[student->courseCount]))
+            break;
+        printError("课程名称格式无效！课程名称不能为空。");
+    }
+    
+    // 输入课程成绩并验证
+    while (1)
+    {
+        student->scores[student->courseCount] = safeInputFloat("课程成绩", MIN_SCORE, MAX_SCORE);
+        if (isValidScore(student->scores[student->courseCount]))
+            break;
+        printError("成绩输入无效！成绩必须在0-100分之间。");
+    }
+    
     student->courseCount++;
 }
 
@@ -352,10 +393,18 @@ static void deleteCourse(Student *student)
     
     int courseIndex = safeInputInt("请选择要删除的课程", 1, student->courseCount) - 1;
     
+    // 验证索引有效性
+    if (!isValidIndex(courseIndex, student->courseCount))
+    {
+        printError("课程索引无效！");
+        return;
+    }
+    
     // 移动数组元素
     for (int k = courseIndex; k < student->courseCount - 1; k++)
     {
-        strcpy(student->courses[k], student->courses[k + 1]);
+        strncpy(student->courses[k], student->courses[k + 1], MAX_COURSE_NAME_LENGTH - 1);
+        student->courses[k][MAX_COURSE_NAME_LENGTH - 1] = '\0';
         student->scores[k] = student->scores[k + 1];
     }
     student->courseCount--;

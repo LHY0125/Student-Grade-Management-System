@@ -61,7 +61,8 @@ void displayCourseStatistics()
             }
             if (!exists)
             {
-                strcpy(courses[courseCount], students[i].courses[j]);
+                strncpy(courses[courseCount], students[i].courses[j], MAX_COURSE_NAME_LENGTH - 1);
+                courses[courseCount][MAX_COURSE_NAME_LENGTH - 1] = '\0';
                 courseCount++;
             }
         }
@@ -410,7 +411,8 @@ OverallStats calculateOverallStats()
             }
             if (!exists)
             {
-                strcpy(courses[uniqueCourseCount], students[i].courses[j]);
+                strncpy(courses[uniqueCourseCount], students[i].courses[j], MAX_COURSE_NAME_LENGTH - 1);
+                courses[uniqueCourseCount][MAX_COURSE_NAME_LENGTH - 1] = '\0';
                 uniqueCourseCount++;
             }
         }

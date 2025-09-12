@@ -3,16 +3,19 @@
  * @brief C语言学生成绩管理系统
  * @details 支持学生信息管理、成绩统计分析、用户权限控制的完整教务管理系统
  * @author 刘航宇
- * @date 2025-07-27
- * @version 3.2.0
+ * @date 2025-09-12
+ * @version 4.0.0
  * @note
- * 1. v3.0.0新增功能（最新版本）：
+ * 1. v4.0.0新增功能（最新版本）：
+ *    - 🔒 密码安全增强，实现SHA-256哈希算法替代明文存储
+ *    - 🛡️ 缓冲区保护，修复所有溢出风险，替换不安全函数
+ *    - ✅ 输入验证强化，加强所有用户输入的验证和边界检查
+ *    - 🧹 内存安全管理，添加安全内存清除功能防止数据残留
+ *    - 🔐 新增安全模块security_utils.c/h，提供完整安全工具库
+ *    - 🎯 增强验证函数，支持课程名称、用户名、密码强度检查
  *    - 🏗️ 统一类型管理系统，创建types.h集中管理所有数据结构
  *    - 🔧 全局变量优化，将排序参数和统计缓存移至全局作用域
  *    - 📦 结构体定义重构，消除重复定义，提升代码一致性
- *    - 🎯 依赖关系优化，简化头文件包含关系，避免循环依赖
- *    - ⚡ 编译效率提升，优化模块间依赖，加快编译速度
- *    - 🧩 架构进一步完善，为后续功能扩展奠定坚实基础
  * 2. v2.2功能（前版本）：
  *    - 🧩 auxiliary.c完全模块化拆分，提升代码可维护性
  *    - ⚡ Makefile优化，支持直接编译模式，无需生成.o文件
@@ -169,7 +172,7 @@
  * @copyright Copyright (c) 2025 学生成绩管理系统开发团队
  * @license MIT License
  * 
- * 编译命令（v3.0.0统一类型管理版本）：
+ * 编译命令（v4.0.0安全性增强版本）：
  * 方式1（推荐）：直接编译
  * gcc -Wall -Wextra -std=c17 -g main.c globals.c main_menu.c user_manage.c core_handlers.c statistical_analysis.c student_io.c student_crud.c student_search.c student_sort.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c -o student_system
  * 

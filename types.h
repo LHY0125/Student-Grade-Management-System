@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include "config.h"
+#include "security_utils.h"
 
 // 核心数据结构
 
@@ -34,7 +35,7 @@ typedef struct {
  */
 typedef struct {
     char username[MAX_USERNAME_LENGTH];
-    char password[MAX_PASSWORD_LENGTH];
+    char passwordHash[SHA256_HEX_LENGTH];  // 存储SHA-256哈希值
     bool isAdmin;  // 是否为管理员
 } User;
 

@@ -139,6 +139,15 @@ void printWarning(const char* message);
  * @param message 要显示的信息消息文本
  * @note 消息会以青色显示，并在末尾自动添加换行符
  */
-void printInfo(const char* message);
+void printInfo(const char *message);
+
+/**
+ * @brief 安全输入单个字符
+ * @details 提供安全的字符输入功能，避免缓冲区溢出
+ * @param prompt 显示给用户的提示信息
+ * @return 返回用户输入的字符
+ * @note 自动清理输入缓冲区
+ */
+char safeInputChar(const char *prompt);
 
 #endif // IO_UTILS_H

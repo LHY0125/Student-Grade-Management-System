@@ -253,3 +253,36 @@ void printInfo(const char *message)
     printColored(message, COLOR_CYAN);
     printf("\n");
 }
+
+/**
+ * @brief 安全输入单个字符
+ * @details 提供安全的字符输入功能，避免缓冲区溢出
+ * @param prompt 显示给用户的提示信息
+ * @return 返回用户输入的字符
+ * @note 自动清理输入缓冲区
+ */
+char safeInputChar(const char *prompt)
+{
+    char buffer[10];
+    char result;
+    
+    while (1)
+    {
+        printf("%s: ", prompt);
+        
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL)
+        {
+            // 移除换行符
+            buffer[strcspn(buffer, "\n")] = '\0';
+            trimString(buffer);
+            
+            if (strlen(buffer) == 1)
+            {
+                result = buffer[0];
+                return result;
+            }
+        }
+        
+        printError("请输入单个字符！");
+    }
+}

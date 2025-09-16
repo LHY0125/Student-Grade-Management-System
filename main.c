@@ -11,6 +11,9 @@
 * @note 编译运行命令：
 *       gcc -std=c17 -o student_system.exe *.c -I.
         ./student_system
+        或者用Makefile编译
+        make run
+        make clean
 * @warning 登录失败超过MAX_LOGIN_ATTEMPTS次会强制退出程序
 */
 

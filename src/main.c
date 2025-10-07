@@ -14,6 +14,9 @@
     或者用Makefile编译
     make run
     make clean
+* @brief 安装程序
+    & "D:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\installer.iss
+    & "D:\Program Files (x86)\NSIS\makensis.exe" installer\installer.nsi
 * @warning 登录失败超过MAX_LOGIN_ATTEMPTS次会强制退出程序
 */
 

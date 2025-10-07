@@ -59,6 +59,11 @@
 ├── 数据访问层 (Data Layer)
 │   ├── CSV文件操作
 │   └── 数据验证
+├── 安装包管理层 (Installer Layer)
+│   ├── 安装脚本目录 (installer/)
+│   ├── Inno Setup脚本 (installer/installer.iss)
+│   ├── NSIS脚本 (installer/installer.nsi)
+│   └── 安装包输出 (installer/dist/)
 └── 配置层 (Config Layer)
     ├── 头文件目录 (include/) - v4.1.0标准化
     ├── 统一类型定义 (include/types.h)

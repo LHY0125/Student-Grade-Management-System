@@ -1,16 +1,16 @@
 # 学生成绩管理系统 Makefile
 # 编译器设置
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c17 -g
+CFLAGS = -Wall -Wextra -std=c17 -g -Iinclude
 
 # 目标文件
 TARGET = student_system
 
 # 源文件
-SOURCES = main.c globals.c main_menu.c user_manage.c core_handlers.c statistical_analysis.c student_io.c student_crud.c student_search.c student_sort.c io_utils.c validation.c string_utils.c file_utils.c math_utils.c system_utils.c security_utils.c
+SOURCES = src/main.c src/globals.c src/main_menu.c src/user_manage.c src/core_handlers.c src/statistical_analysis.c src/student_io.c src/student_crud.c src/student_search.c src/student_sort.c src/io_utils.c src/validation.c src/string_utils.c src/file_utils.c src/math_utils.c src/system_utils.c src/security_utils.c
 
 # 头文件
-HEADERS = config.h globals.h main_menu.h user_manage.h core_handlers.h statistical_analysis.h student_io.h student_crud.h student_search.h student_sort.h io_utils.h validation.h string_utils.h file_utils.h math_utils.h system_utils.h security_utils.h types.h
+HEADERS = include/config.h include/globals.h include/main_menu.h include/user_manage.h include/core_handlers.h include/statistical_analysis.h include/student_io.h include/student_crud.h include/student_search.h include/student_sort.h include/io_utils.h include/validation.h include/string_utils.h include/file_utils.h include/math_utils.h include/system_utils.h include/security_utils.h include/types.h
 
 # 默认目标
 all: $(TARGET)
@@ -21,9 +21,9 @@ $(TARGET): $(SOURCES) $(HEADERS)
 
 # 清理编译文件
 clean:
-	rm -f $(TARGET)
-	rm -f *.exe
-	rm -f *.o
+	-del /Q $(TARGET).exe 2>nul
+	-del /Q *.exe 2>nul
+	-del /Q *.o 2>nul
 
 # 创建必要的目录
 setup:

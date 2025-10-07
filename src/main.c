@@ -6,14 +6,14 @@
 *          程序流程：设置编码 -> 系统初始化 -> 用户登录 -> 主菜单循环 -> 数据保存 -> 系统清理
 * @return 程序退出状态码：0表示正常退出，-1表示异常退出
 * @note 系统预设用户账户：
-*       1. admin - 密码：123456（管理员权限）
-*       2. teacher - 密码：password（普通用户权限）
+*   1. admin - 密码：123456（管理员权限）
+*   2. teacher - 密码：password（普通用户权限）
 * @note 编译运行命令：
-*       gcc -std=c17 -o student_system.exe *.c -I.
-        ./student_system
-        或者用Makefile编译
-        make run
-        make clean
+*   gcc -std=c17 -o student_system.exe src/*.c -Iinclude
+    ./student_system
+    或者用Makefile编译
+    make run
+    make clean
 * @warning 登录失败超过MAX_LOGIN_ATTEMPTS次会强制退出程序
 */
 

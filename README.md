@@ -178,6 +178,12 @@ Stu_scores_system/ (v4.1.0 标准化目录结构)
 │   ├── types.h              # 统一数据类型定义
 │   ├── user_manage.h        # 用户管理
 │   └── validation.h         # 数据验证工具库
+├── 📁 installer/             # 安装包管理目录
+│   ├── installer.iss        # Inno Setup安装脚本
+│   ├── installer.nsi        # NSIS安装脚本
+│   └── 📁 dist/             # 安装包输出目录
+│       ├── StudentGradeSystem_Inno_Setup.exe  # Inno Setup安装包
+│       └── StudentGradeSystem_NSIS_Setup.exe  # NSIS安装包
 ├── 📁 src/                   # 源文件目录
 │   ├── core_handlers.c      # 核心处理器
 │   ├── file_utils.c         # 文件操作工具库
